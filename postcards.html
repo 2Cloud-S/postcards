@@ -99,9 +99,31 @@ window.Quarto = {
 </header>
 
 
-<p>Voting behavior is often influenced by both personal characteristics and external social cues. Using data from a 2006 voter turnout experiment in Michigan with over 300,000 participants, we examine whether receiving a postcard reminder affects the likelihood that someone votes. However, our conclusions may be limited if the Michigan sample is not representative of Texas voters today or if the treatment effects were influenced by social interactions among participants, violating key assumptions like representativeness and stability.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="postcards_files/figure-html/beautiful-vote-plot-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Postcard treatments increase the probability of voting, especially for ‘Self’ and ‘Neighbors’ messages.</figcaption>
+</figure>
+</div>
+</div>
+<p>Causal Effects of Postcards on Voter Turnout by Voter Type</p>
+</div>
+<p>Voting behavior is often influenced by both personal characteristics and external social cues. Using data from a 2006 voter turnout experiment in Michigan with over 300,000 participants, we examine whether receiving a postcard reminder affects the likelihood that someone votes. However, our conclusions may be limited if the Michigan sample is not representative of Texas voters today or if the treatment effects were influenced by social interactions among participants, violating key assumptions like representativeness and stability. We model the likelihood of voting as a logistic function of age, sex, treatment group, and prior voting behavior. For example, we estimate that the “Neighbors” mailing increases the probability of voting by about 36 percentage points for those who usually don’t vote, with a 95% confidence interval ranging from approximately 28% to 44%.</p>
 <p><span class="math display">\[
 Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \cdots + \beta_k X_{ki} + \epsilon_i
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}
+\log\left(\frac{P(\hat{voted} = 1)}{1 - P(\hat{voted} = 1)}\right) &amp;= -2.43 + 0.01 \cdot \text{age} + 0.04 \cdot \text{sexMale} + 0.09 \cdot \text{treatmentCivic Duty} + 0.07 \cdot \text{treatmentHawthorne} \\
+&amp;\quad + 0.20 \cdot \text{treatmentSelf} + 0.36 \cdot \text{treatmentNeighbors} + 0.82 \cdot \text{voter\_classSometimes Vote} \\
+&amp;\quad + 1.61 \cdot \text{voter\_classAlways Vote} + 0.03 \cdot \text{treatmentCivic Duty} \times \text{voter\_classSometimes Vote} \\
+&amp;\quad + 0.06 \cdot \text{treatmentHawthorne} \times \text{voter\_classSometimes Vote} + 0.05 \cdot \text{treatmentSelf} \times \text{voter\_classSometimes Vote} \\
+&amp;\quad + 0.04 \cdot \text{treatmentNeighbors} \times \text{voter\_classSometimes Vote} - 0.05 \cdot \text{treatmentCivic Duty} \times \text{voter\_classAlways Vote} \\
+&amp;\quad + 0.06 \cdot \text{treatmentHawthorne} \times \text{voter\_classAlways Vote} - 0.01 \cdot \text{treatmentSelf} \times \text{voter\_classAlways Vote} \\
+&amp;\quad + 0.01 \cdot \text{treatmentNeighbors} \times \text{voter\_classAlways Vote}
+\end{align}
 \]</span></p>
 
 </main>

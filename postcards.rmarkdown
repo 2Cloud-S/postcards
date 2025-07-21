@@ -11,7 +11,7 @@ library(tidyverse)
 library(primer.data)
 library(tidymodels)
 library(broom)
-library(gt)
+
 ```
 
 
@@ -122,3 +122,4 @@ vote_summary |>
     conf.high = "Upper 95% CI"
   )
 ```
+
