@@ -63,4 +63,26 @@ $$
 $$
 
 
+```{r}
+#| label: vote-table
+#| cache: true
 
+# Create a tidy summary with confidence intervals
+vote_summary <- tidy(fit_vote, conf.int = TRUE)
+
+# Keep only relevant columns: term, estimate, conf.low, conf.high
+vote_summary |>
+  select(term, estimate, conf.low, conf.high) |>
+  mutate(across(where(is.numeric), round, 2)) |>
+  gt() |>
+  tab_header(
+    title = "Logistic Regression Estimates",
+    subtitle = "With 95% Confidence Intervals"
+  ) |>
+  cols_label(
+    term = "Term",
+    estimate = "Estimate",
+    conf.low = "Lower 95% CI",
+    conf.high = "Upper 95% CI"
+  )
+```
