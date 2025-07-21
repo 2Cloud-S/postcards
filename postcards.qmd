@@ -1,0 +1,66 @@
+---
+title: "Voting and Postcards"
+author: "Afnan Khan"
+format: html
+execute: 
+  echo: false
+---
+
+Voting behavior is often influenced by both personal characteristics and external social cues. Using data from a 2006 voter turnout experiment in Michigan with over 300,000 participants, we examine whether receiving a postcard reminder affects the likelihood that someone votes. However, our conclusions may be limited if the Michigan sample is not representative of Texas voters today or if the treatment effects were influenced by social interactions among participants, violating key assumptions like representativeness and stability.
+
+
+```{r setup}
+#| message: false
+library(tidyverse)
+library(primer.data)
+library(tidymodels)
+library(broom)
+
+```
+
+
+
+
+```{r}
+x <- shaming |> 
+  mutate(civ_engage = primary_00 + primary_02 + primary_04 + 
+           general_00 + general_02 + general_04) |> 
+  select(primary_06, treatment, sex, age, civ_engage) |> 
+  mutate(voter_class = factor(
+    case_when(
+      civ_engage %in% c(5, 6) ~ "Always Vote",
+      civ_engage %in% c(3, 4) ~ "Sometimes Vote",
+      civ_engage %in% c(1, 2) ~ "Rarely Vote"),
+    levels = c("Rarely Vote", "Sometimes Vote", "Always Vote"),
+    ordered = TRUE)) |> 
+  mutate(voted = as.factor(primary_06))
+```
+
+
+```{r}
+#| cache: true
+
+
+fit_vote <- logistic_reg() |>
+  fit(voted ~ age + sex + treatment * voter_class, data = turnout)
+
+```
+
+$$
+Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \cdots + \beta_k X_{ki} + \epsilon_i
+$$
+
+$$
+\begin{align}
+\log\left(\frac{P(\hat{voted} = 1)}{1 - P(\hat{voted} = 1)}\right) &= -2.43 + 0.01 \cdot \text{age} + 0.04 \cdot \text{sexMale} + 0.09 \cdot \text{treatmentCivic Duty} + 0.07 \cdot \text{treatmentHawthorne} \\
+&\quad + 0.20 \cdot \text{treatmentSelf} + 0.36 \cdot \text{treatmentNeighbors} + 0.82 \cdot \text{voter\_classSometimes Vote} \\
+&\quad + 1.61 \cdot \text{voter\_classAlways Vote} + 0.03 \cdot \text{treatmentCivic Duty} \times \text{voter\_classSometimes Vote} \\
+&\quad + 0.06 \cdot \text{treatmentHawthorne} \times \text{voter\_classSometimes Vote} + 0.05 \cdot \text{treatmentSelf} \times \text{voter\_classSometimes Vote} \\
+&\quad + 0.04 \cdot \text{treatmentNeighbors} \times \text{voter\_classSometimes Vote} - 0.05 \cdot \text{treatmentCivic Duty} \times \text{voter\_classAlways Vote} \\
+&\quad + 0.06 \cdot \text{treatmentHawthorne} \times \text{voter\_classAlways Vote} - 0.01 \cdot \text{treatmentSelf} \times \text{voter\_classAlways Vote} \\
+&\quad + 0.01 \cdot \text{treatmentNeighbors} \times \text{voter\_classAlways Vote}
+\end{align}
+$$
+
+
+
